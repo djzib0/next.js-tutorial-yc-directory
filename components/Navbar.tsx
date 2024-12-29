@@ -6,12 +6,14 @@ import React from 'react'
 const Navbar = async () => {
 
   const session = await auth();
-    // ended at 1:29:02 (beginning of tailwind configuration)
+
+  // ended at 1:55:29
+
   return (
     <header className='px-5 py-3 bg-white shadow-sm font-work-sans'>
       <nav className='flex justify-between items-center'>
         <Link href={"/"}>
-          <Image src={"/app_logo.png"} alt='application logo' height={30} width={144}/>
+          <Image src={"/logo.png"} alt='application logo' height={30} width={144}/>
         </Link>
         <div className='flex items-center gap-5 text-black'>
           {session && session.user ? (
