@@ -63,7 +63,6 @@ const StartupCard = ({post}: {post: StartupCardPropsType}) => {
               </Link>
             </Button>
           </div>
-
       </div>
     </li>
   </>

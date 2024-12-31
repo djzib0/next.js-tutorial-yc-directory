@@ -1,11 +1,17 @@
 import StartupCard from "@/components/StartupCard";
 import SearchForm from "../../components/SearchForm";
+import { client } from "@/sanity/lib/client";
+import { STARTUPS_QUERY } from "@/lib/queries";
 
 export default async function Home({searchParams}: {
   searchParams: Promise<{query?: string}>
 }) {
 
   const query = (await searchParams).query
+
+  const posts = await client.fetch(STARTUPS_QUERY)
+
+  // ended at 2:39:47
 
   type StartupCardType = {
     _createdAt: Date;
@@ -18,22 +24,22 @@ export default async function Home({searchParams}: {
     title: string;
   }
 
-  const posts: StartupCardType[] = [
-    {
-      _createdAt: new Date(),
-      _id: 1,
-      views: 55,
-      author: {
-        id: 1,
-        name: "Adrian",
-      },
-      description: "This is a description",
-      image: "https://images.unsplash.com/photo-1631201884672-b00d9327ee9c?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      category: "Robots",
-      title: "We Robots"
+  // const posts: StartupCardType[] = [
+  //   {
+  //     _createdAt: new Date(),
+  //     _id: 1,
+  //     views: 55,
+  //     author: {
+  //       id: 1,
+  //       name: "Adrian",
+  //     },
+  //     description: "This is a description",
+  //     image: "https://images.unsplash.com/photo-1631201884672-b00d9327ee9c?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  //     category: "Robots",
+  //     title: "We Robots"
 
-    }
-  ]
+  //   }
+  // ]
 
   return (
     <>
