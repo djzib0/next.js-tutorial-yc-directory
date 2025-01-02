@@ -4,19 +4,25 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
 import { Button } from './ui/button';
+import { Author, Startup } from '@/sanity/types';
 
-type StartupCardPropsType = {
-    _createdAt: Date;
-    _id: number;
-    views: number;
-    author: {id: number, name: string};
-    description: string;
-    image: string;
-    category: string;
-    title: string;
-  }
+// type StartupCardPropsType = {
+//     _createdAt: Date;
+//     _id: number;
+//     views: number;
+//     author: {id: number, name: string};
+//     description: string;
+//     image: string;
+//     category: string;
+//     title: string;
+//   }
 
-const StartupCard = ({post}: {post: StartupCardPropsType}) => {
+// below line says that the StartupTypeCard will be a type of Startup,
+// excluding author (omitting author), and the author will be
+// optional and will be a type of Author
+export type StartupTypeCard = Omit<Startup, "author"> & {author?: Author}
+
+const StartupCard = ({post}: {post: StartupTypeCard}) => {
 
   const {_createdAt, _id, title, description, category, views, author, image} = post;
 
@@ -34,14 +40,14 @@ const StartupCard = ({post}: {post: StartupCardPropsType}) => {
       <div>
         <div className='flex-between mt-5 gap-5'>
           <div className='flex-1'>
-            <Link href={`/users/${_id}`}>
-              <p className='text-16-medium line-clamp-1'>{author.name}</p>
+            <Link href={`/users/${author?._id}`}>
+              <p className='text-16-medium line-clamp-1'>{author?.name}</p>
             </Link>
             <Link href={`/startup/${_id}`}>
               <h3 className='text-26-semibold line-clamp-1'>{title}</h3>
             </Link>
           </div>
-          <Link href={`/users/${_id}`}>
+          <Link href={`/users/${author?._id}`}>
             <Image src={"https://placehold.co/48x48"} alt="placeholder" width={48} height={48} className='rounded-full' />
           </Link>
         </div>
@@ -54,7 +60,7 @@ const StartupCard = ({post}: {post: StartupCardPropsType}) => {
           </Link>
 
           <div className='flex-between gap-3 mt-5'>
-            <Link href={`/?query=${category.toLowerCase()}`}>
+            <Link href={`/?query=${category?.toLowerCase()}`}>
               <p className='text-16-medium'>{category}</p>
             </Link>
             <Button className='startup-card_btn' asChild>
