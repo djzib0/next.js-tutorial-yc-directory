@@ -8,9 +8,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [GitHub],
   callbacks: {
     async signIn({user: {name, email, image}, profile: {id, login, bio}}) {
-      const existingUser = await client.fetch(
+      const existingUser = await client.withConfig({useCdn: false}).fetch(
         AUTHOR_BY_GITHUB_ID_QUERY, 
-        {id: id}
+        {id}
       )
 
       if (!existingUser) {
@@ -22,11 +22,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           email,
           image,
           bio: bio || "",
-        })
+        });
       }
 
-      return true
-      // finished at 3:39:33
+      return true;
+    },
+    async jwt({token, account, profile}) {
+      if (account && profile) {
+        const user = await client.withConfig({useCdn: false}).fetch(AUTHOR_BY_GITHUB_ID_QUERY, {id: profile?.id});
+
+        token.id = user?._id;
+      }
+
+      return token;
+    },
+    async session({session, token}) {
+      Object.assign(session, {id: token.id});
+      return session
     }
-  }
+  },
 })
