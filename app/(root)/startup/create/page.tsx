@@ -1,5 +1,6 @@
 import { auth } from '@/auth'
 import StartupForm from '@/components/StartupForm'
+import TestForm from '@/components/TestForm';
 import { redirect } from 'next/navigation';
 import React from 'react'
 
@@ -16,6 +17,7 @@ const CreatePage = async () => {
       </section>
 
       <StartupForm />
+      <TestForm />
     </>
   )
 }
