@@ -8,6 +8,7 @@ const Navbar = async () => {
   const session = await auth();
 
   // learn Next.js/React Form
+  console.log(session.id, " session in navbar")
   return (
     <header className='px-5 py-3 bg-white shadow-sm font-work-sans'>
       <nav className='flex justify-between items-center'>
@@ -30,7 +31,7 @@ const Navbar = async () => {
                   Logout
                 </button>
               </form>
-              <Link href={`/user/${session.user.id}`}>
+              <Link href={`/user/${session.id}`}>
                 <span>{session?.user.name}</span>
               </Link>
             </>
