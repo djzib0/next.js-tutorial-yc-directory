@@ -1,17 +1,23 @@
 'use client'
 
 import React, { useActionState, useState } from 'react';
-import { Input } from './ui/input';
 import MDEditor from '@uiw/react-md-editor'
 import { Button } from './ui/button';
 import { Send } from 'lucide-react';
 import { formSchema } from '@/lib/validation';
+import { z } from 'zod';
+import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
+import { createPitch } from '@/lib/actions';
 
 const StartupForm = () => {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   // markdown editor state
   const [pitch, setPitch] = useState("")
+
+  const { toast } = useToast();
+  const router = useRouter();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFormSubmit = async (prevState: any, formData: FormData) => {
@@ -26,18 +32,51 @@ const StartupForm = () => {
 
       await formSchema.parseAsync(formValues);
 
-      // const result = await createDiffieHellman(prevState, formData, pitch);
+      const result = await createPitch(prevState, formData, pitch);
 
-      console.log("I'm here")
+      if (result.status === "SUCCESS") {
+
+        toast({
+          title: "Success",
+          description: "Your startup pitch has been created successfully"
+        })
+      }
+
+      router.push(`/startup/${result._id}`)
+      console.log("I'm  here mate")
+      return result
+
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const fieldErrors = error.flatten().fieldErrors;
+
+        setErrors(fieldErrors as unknown as Record<string, string>);
+
+        toast({
+          title: "Error",
+          description: "Please check your inputs and try again",
+          variant: "destructive",
+        })
+
+        return {
+          ...prevState,
+          error: "Validation failed",
+          status: "ERROR"
+        }
+
+      }
+
+      toast({
+        title: "Error",
+        description: "Please check your inputs and try again",
+        variant: "destructive",
+      })
 
       return {
         ...prevState,
-        ...formValues
+        error: "An unexpected error has occurred",
+        status: "ERROR"
       }
-    } catch (error) {
-      return error
-    } finally {
-
     }
 
     return {

@@ -10,8 +10,6 @@ export default async function Home({searchParams}: {
   searchParams: Promise<{query?: string}>
 }) {
 
-  // ended at 3:04:50
-
   const query = (await searchParams).query
   const params = {search: query || null}
 
